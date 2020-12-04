@@ -6,11 +6,11 @@
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 20:07:22 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/03 22:32:34 by hsaadaou         ###   ########.fr       */
+/*   Updated: 2020/12/04 18:16:52 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*get_rest(char *save)
 {

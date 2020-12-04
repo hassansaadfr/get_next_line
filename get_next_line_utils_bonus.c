@@ -6,11 +6,11 @@
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 20:15:36 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/03 22:31:23 by hsaadaou         ###   ########.fr       */
+/*   Updated: 2020/12/04 18:16:58 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t		ft_strlen(const char *s)
 {
