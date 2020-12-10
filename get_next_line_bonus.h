@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/23 19:59:36 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/03 22:31:23 by hsaadaou         ###   ########.fr       */
+/*   Created: 2020/12/07 16:07:45 by hsaadaou          #+#    #+#             */
+/*   Updated: 2020/12/10 16:06:19 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-int					get_next_line(int fd, char **line);
-int					is_end_line(char *str);
-
-size_t				ft_strlen(const char *s);
-
-char				*join_strings_and_clean(const char *s1, const char *s2);
+int		get_next_line(int fd, char **line);
+size_t	ft_strlen(const char *s);
+void	ft_bzero(void *s, size_t n);
+char	*ft_strdup(const char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t size);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
