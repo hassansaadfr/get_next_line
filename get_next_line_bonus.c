@@ -5,66 +5,87 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/12/07 16:06:56 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/10 16:05:44 by hsaadaou         ###   ########.fr       */
+/*   Created: 2020/11/23 20:07:22 by hsaadaou          #+#    #+#             */
+/*   Updated: 2020/12/03 22:32:34 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
-int		check_errors(int fd, char **line)
+char	*get_rest(char *save)
 {
-	if (fd == -1 || BUFFER_SIZE < 1 || line == NULL)
-		return (-1);
-	return (1);
-}
-
-char	*find_newline(char *remaining, char **line, char *buff)
-{
-	char	*temp_line;
-	char	*to_parse;
-	char	*newline_pos;
-	size_t	i;
+	char	*rtn;
+	int		i;
+	int		j;
 
 	i = 0;
-	to_parse = ft_strlen(remaining) ? ft_strdup(remaining) : ft_strdup(buff);
-	while (i < ft_strlen(to_parse))
+	j = 0;
+	if (!save)
+		return (0);
+	while (save[i] && save[i] != '\n')
+		i++;
+	if (!save[i])
 	{
-		if (to_parse[i] == '\n')
-		{
-			to_parse[i] = '\0';
-			if (!(temp_line = malloc(sizeof(char) * i + 2)))
-				return (NULL);
-			ft_strlcpy(temp_line, to_parse, i + 2);
-			*line = ft_strjoin(*line, temp_line);
-			newline_pos = ft_strdup(to_parse + i + 1);
-			free(temp_line);
-			return (newline_pos);
-		}
+		free(save);
+		return (0);
+	}
+	if (!(rtn = malloc(sizeof(char) * ((ft_strlen(save) - i) + 1))))
+		return (0);
+	i++;
+	while (save[i])
+		rtn[j++] = save[i++];
+	rtn[j] = '\0';
+	free(save);
+	return (rtn);
+}
+
+char	*get_correct_line(char *str)
+{
+	int		i;
+	char	*rtn;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i] && str[i] != '\n')
+		i++;
+	if (!(rtn = malloc(sizeof(char) * (i + 1))))
+		return (0);
+	i = 0;
+	while (str[i] && str[i] != '\n')
+	{
+		rtn[i] = str[i];
 		i++;
 	}
-	if (ft_strlen(to_parse))
-		*line = ft_strjoin(*line, to_parse);
-	return (NULL);
+	rtn[i] = '\0';
+	return (rtn);
 }
 
 int		get_next_line(int fd, char **line)
 {
-	static char	*rem[17] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-	char		buff[BUFFER_SIZE + 1];
-	int			bytes_read;
+	char			*buff;
+	static char		*save[4096];
+	int				reader;
 
-	if (!rem[fd])
-		rem[fd] = 0;
-	if (check_errors(fd, line) == -1)
+	reader = 1;
+	if (fd < 0 || !line || BUFFER_SIZE <= 0)
 		return (-1);
-	*line = ft_strdup("");
-	ft_bzero(buff, BUFFER_SIZE + 1);
-	while (!(rem[fd] = find_newline(rem[fd], line, buff)))
+	if (!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+		return (-1);
+	while (!is_end_line(save[fd]) && reader != 0)
 	{
-		if ((bytes_read = read(fd, buff, BUFFER_SIZE)) == -1 || bytes_read == 0)
-			return (bytes_read);
-		buff[bytes_read] = '\0';
+		if ((reader = read(fd, buff, BUFFER_SIZE)) == -1)
+		{
+			free(buff);
+			return (-1);
+		}
+		buff[reader] = '\0';
+		save[fd] = join_strings_and_clean(save[fd], buff);
 	}
+	free(buff);
+	*line = get_correct_line(save[fd]);
+	save[fd] = get_rest(save[fd]);
+	if (reader == 0)
+		return (0);
 	return (1);
 }
