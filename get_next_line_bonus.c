@@ -6,65 +6,65 @@
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 20:07:22 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/03 22:32:34 by hsaadaou         ###   ########.fr       */
+/*   Updated: 2020/12/15 15:55:09 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*get_rest(char *save)
+char	*get_rest(char *buff)
 {
-	char	*rtn;
+	char	*remaining;
 	int		i;
 	int		j;
 
 	i = 0;
 	j = 0;
-	if (!save)
+	if (!buff)
 		return (0);
-	while (save[i] && save[i] != '\n')
+	while (buff[i] && buff[i] != '\n')
 		i++;
-	if (!save[i])
+	if (!buff[i])
 	{
-		free(save);
+		free(buff);
 		return (0);
 	}
-	if (!(rtn = malloc(sizeof(char) * ((ft_strlen(save) - i) + 1))))
+	if (!(remaining = malloc(sizeof(char) * ((ft_strlen(buff) - i) + 1))))
 		return (0);
 	i++;
-	while (save[i])
-		rtn[j++] = save[i++];
-	rtn[j] = '\0';
-	free(save);
-	return (rtn);
+	while (buff[i])
+		remaining[j++] = buff[i++];
+	remaining[j] = '\0';
+	free(buff);
+	return (remaining);
 }
 
 char	*get_correct_line(char *str)
 {
 	int		i;
-	char	*rtn;
+	char	*remaining;
 
 	i = 0;
 	if (!str)
 		return (0);
 	while (str[i] && str[i] != '\n')
 		i++;
-	if (!(rtn = malloc(sizeof(char) * (i + 1))))
+	if (!(remaining = malloc(sizeof(char) * (i + 1))))
 		return (0);
 	i = 0;
 	while (str[i] && str[i] != '\n')
 	{
-		rtn[i] = str[i];
+		remaining[i] = str[i];
 		i++;
 	}
-	rtn[i] = '\0';
-	return (rtn);
+	remaining[i] = '\0';
+	return (remaining);
 }
 
 int		get_next_line(int fd, char **line)
 {
 	char			*buff;
-	static char		*save[4096];
+	static char		*buff[4096];
 	int				reader;
 
 	reader = 1;
@@ -72,7 +72,7 @@ int		get_next_line(int fd, char **line)
 		return (-1);
 	if (!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	while (!is_end_line(save[fd]) && reader != 0)
+	while (!get_nl(buff[fd]) && reader != 0)
 	{
 		if ((reader = read(fd, buff, BUFFER_SIZE)) == -1)
 		{
@@ -80,11 +80,11 @@ int		get_next_line(int fd, char **line)
 			return (-1);
 		}
 		buff[reader] = '\0';
-		save[fd] = join_strings_and_clean(save[fd], buff);
+		buff[fd] = join_str(buff[fd], buff);
 	}
 	free(buff);
-	*line = get_correct_line(save[fd]);
-	save[fd] = get_rest(save[fd]);
+	*line = get_correct_line(buff[fd]);
+	buff[fd] = get_rest(buff[fd]);
 	if (reader == 0)
 		return (0);
 	return (1);
