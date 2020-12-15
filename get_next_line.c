@@ -6,7 +6,7 @@
 /*   By: hsaadaou <hsaadaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/23 20:07:22 by hsaadaou          #+#    #+#             */
-/*   Updated: 2020/12/15 15:55:09 by hsaadaou         ###   ########.fr       */
+/*   Updated: 2020/12/15 20:45:26 by hsaadaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*get_correct_line(char *str)
 int		get_next_line(int fd, char **line)
 {
 	char			*buff;
-	static char		*buff[4096];
+	static char		*rem[4096];
 	int				reader;
 
 	reader = 1;
@@ -72,7 +72,7 @@ int		get_next_line(int fd, char **line)
 		return (-1);
 	if (!(buff = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	while (!get_nl(buff[fd]) && reader != 0)
+	while (!get_nl(rem[fd]) && reader != 0)
 	{
 		if ((reader = read(fd, buff, BUFFER_SIZE)) == -1)
 		{
@@ -80,11 +80,11 @@ int		get_next_line(int fd, char **line)
 			return (-1);
 		}
 		buff[reader] = '\0';
-		buff[fd] = join_str(buff[fd], buff);
+		rem[fd] = join_str(rem[fd], buff);
 	}
 	free(buff);
-	*line = get_correct_line(buff[fd]);
-	buff[fd] = get_rest(buff[fd]);
+	*line = get_correct_line(rem[fd]);
+	rem[fd] = get_rest(rem[fd]);
 	if (reader == 0)
 		return (0);
 	return (1);
